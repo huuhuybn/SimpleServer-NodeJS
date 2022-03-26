@@ -3,10 +3,7 @@ var router = express.Router();
 var fs = require('fs')
 
 var db = 'mongodb+srv://admin:i6bkzeGwmfoZqsI5@cluster0.wg9fr.mongodb.net/student?retryWrites=true&w=majority'
-const mongoose = require('mongoose');
-mongoose.connect(db).catch(error => {
-    console.log("co loi xay ra" + error)
-});
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -19,6 +16,13 @@ router.get('/', function (req, res, next) {
         mang: data, sinhVien: student
     });
 
+});
+
+
+var dbb = 'mongodb+srv://admin:Iyo6tI9V69oy1oft@cluster0.tze35.mongodb.net/mydata?retryWrites=true&w=majority'
+const mongoose = require('mongoose');
+mongoose.connect(dbb).catch(error => {
+    console.log("co loi xay ra" + error)
 });
 
 router.get('/asia', function (req, res, next) {
@@ -259,5 +263,46 @@ router.post('/student', function (request, response) {
 
 
 })
+router.get('/cars', function (req, res) {
+    Car.find({}, function (err, data) {
+        res.render('cars', {duLieu: data})
+    })
+})
+// buoc 1 : khoi tao khung - Schema
+var carSchema = new mongoose.Schema({
+    maXe: 'string',
+    giaXe: 'string'
+})
+// buoc 2 : lien ket Schema vs mongoDB qua mongoose
+var Car = mongoose.model('car', carSchema);
 
+router.post('/addCar', function (req, res) {
+    var maXe = req.body.maXe
+    var giaXe = req.body.giaXe
+    // b3 : khởi tạo Car vs giá trị lấy được
+    const car = new Car({
+        maXe: maXe,
+        giaXe: giaXe
+    })
+    car.save(function (error) {
+        var mess;
+        if (error == null) {
+            mess = 'Them thanh cong'
+        } else {
+            mess = error
+        }
+        console.log(maXe + giaXe)
+        res.render('cars')
+    })
+
+
+    Car.deleteOne({_id: '623ed30e9241476c955a209c'}, function (error) {
+
+    })
+
+    Car.updateOne({_id: '623ed30e9241476c955a209c'}, {maXe: '11111', giaXe: 'bnmbnmbnmbn'}, function (error) {
+
+    })
+
+})
 module.exports = router;
