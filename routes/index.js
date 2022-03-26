@@ -2,10 +2,10 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs')
 
-var db = 'mongodb+srv://admin:VZg4GvN9dEoEufIY@cluster0.svz3x.mongodb.net/mydata?retryWrites=true&w=majority'
+var db = 'mongodb+srv://admin:i6bkzeGwmfoZqsI5@cluster0.wg9fr.mongodb.net/student?retryWrites=true&w=majority'
 const mongoose = require('mongoose');
 mongoose.connect(db).catch(error => {
-    console.log("co loi xay ra")
+    console.log("co loi xay ra" + error)
 });
 
 /* GET home page. */
@@ -100,7 +100,7 @@ router.get('/hot-view', function (req, res, next) {
     });
 });
 
-// viết câu lệnh thêm vào collection - students - database - mydata
+/*// viết câu lệnh thêm vào collection - students - database - mydata
 
 // bước 1 : định nghĩa Schema - tương đương với model bên Java
 const studentSchema = new mongoose.Schema({
@@ -108,7 +108,7 @@ const studentSchema = new mongoose.Schema({
     content: 'string'
 });
 // students : là tên của collection tạo phía trang mongoDB ban nãy
-const Student = mongoose.model('students', studentSchema);
+const Student = mongoose.model('students', studentSchema);*/
 
 router.post('/support', async function (req, res) {
     // lấy tham số ra
@@ -141,7 +141,7 @@ router.post('/support', async function (req, res) {
     });
 
 // câu lệnh xóa
-    let xoa = await Student.findOneAndDelete(filter, function (error) {
+    let xoa = await Student.deleteOne(filter, function (error) {
         console.log(error)
         console.log("xoa thành công")
     })
@@ -205,5 +205,59 @@ router.post('/hotro', function (request,
 
 });
 
+router.get('/photos', function (request, response) {
+
+    response.render('photos')
+})
+
+// b1 : định nghĩa Schema - model
+var studentSch = new mongoose.Schema({
+    email: 'string',
+    name: 'string',
+    sdt: 'string'
+});
+// b2 : khai báo Schema với thư viện mongosee
+var Student = mongoose.model('student', studentSch);
+
+router.post('/student', function (request, response) {
+
+    var email = request.body.email;
+    var ten = request.body.name;
+    var sdt = request.body.sdt;
+
+    console.log(email + ten + sdt);
+
+    const data = new Student({
+        email: email,
+        name: ten,
+        sdt: sdt
+    });
+    data.save(function (error) {
+        var mes;
+        if (error == null) {
+            mes = 'Them thanh cong'
+            console.log('them thanh cong')
+        } else mes = error
+        response.render('photos', {message: mes})
+    })
+
+    // lấy danh sách
+    Student.find({}, function (err, data) {
+
+        response.render('photos', {data: data})
+
+    })
+    // xóa
+    Student.deleteOne({_id: ''}, function (error) {
+
+    })
+
+    // sửa
+    Student.updateOne({_id: ''}, {email: 'ABC@gmail.com', name: 'AAAAAAA'}, function (error) {
+
+    })
+
+
+})
 
 module.exports = router;
