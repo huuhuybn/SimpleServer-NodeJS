@@ -334,5 +334,34 @@ router.post('/addCar', function (req, res) {
 
 })
 
+const multer1 = require('multer')
 
+var storage1 = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        var random = Math.random();
+        cb(null, random + Date.now() + file.originalname);
+    },
+});
+
+var upload1 = multer1({
+    storage: storage1, limits: {
+        fileSize: 1 * 1024 // giới hạn file up lên là 1MB
+    }
+});
+router.get('/upload', function (req, res) {
+    res.render('upload', {message: ''})
+})
+
+router.post('/upload', function (req, res) {
+    upload1(req, res, function (err) {
+        if (err) {
+            res.render('upload', {message: err.message})
+        } else {
+            res.render('upload', {message: 'Tải file thành công!!!'})
+        }
+    })
+})
 module.exports = router;
