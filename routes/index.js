@@ -1,9 +1,40 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs')
+var multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+var upload = multer({
+    storage: storage, limits: {
+        fileSize: 1 * 1024
+    }
+}).single('avatar');
 
 var db = 'mongodb+srv://admin:i6bkzeGwmfoZqsI5@cluster0.wg9fr.mongodb.net/student?retryWrites=true&w=majority'
 
+// trả về file giao diện đăng kí
+router.get('/register', function (req, res) {
+    res.render('register', {message: ''})
+})
+
+// đón dữ liệu file từ form html
+router.post('/register', function (req, res) {
+    // đổi tên file
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            res.render('register', {message: err.message})
+        } else {
+            res.render('register', {message: 'Thành công!!!!'})
+        }
+    })
+})
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -15,9 +46,7 @@ router.get('/', function (req, res, next) {
         title: 'Express', name: 'Huy Nguyen',
         mang: data, sinhVien: student
     });
-
 });
-
 
 var dbb = 'mongodb+srv://admin:Iyo6tI9V69oy1oft@cluster0.tze35.mongodb.net/mydata?retryWrites=true&w=majority'
 const mongoose = require('mongoose');
@@ -96,7 +125,6 @@ router.get('/hot-view', function (req, res, next) {
             {name: 'Huy Nguyen 4', sinhNhat: '08092022555', sdt: '0913360468'},
             {name: 'Huy Nguyen 5', sinhNhat: '080920223333', sdt: '0913360468'}
         ]
-
     }
     res.render('hot', {
         title: 'Hot', diaChi: diaChi, mang: mang, sinhVien: sinhVien, danhSach: danhSach,
@@ -305,4 +333,6 @@ router.post('/addCar', function (req, res) {
     })
 
 })
+
+
 module.exports = router;
