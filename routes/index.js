@@ -198,7 +198,7 @@ router.get('/allMobile', function (req, res) {
     // lấy danh sách students
     Student.find({}, function (err, data) {
         // trả về 1 file ejs.
-        res.send(data)
+        res.send(JSON.stringify(data))
     })
 
 })
