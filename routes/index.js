@@ -201,6 +201,18 @@ router.get('/allMobile', function (req, res) {
     })
 
 })
+
+router.post('/deleteMobile', function (req, res) {
+    var email = req.body.email;
+    fs.unlink('files/' + email + '.text', function (err) {
+        var data = {
+            code : '200',
+            message : 'OK',
+            error : err.message
+        }
+        res.send(data)
+    });
+})
 router.post('/delete', function (req, res) {
     var email = req.body.email;
     fs.unlink('files/' + email + '.text', function (err) {
