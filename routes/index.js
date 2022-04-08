@@ -199,6 +199,8 @@ router.get('/allMobile', function (req, res) {
     Student.find({}, function (err, data) {
         // trả về 1 file ejs.
         // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:2000');
+
         // Request methods you wish to allow
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
