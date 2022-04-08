@@ -48,9 +48,11 @@ router.get('/', function (req, res, next) {
     });
 });
 
-var dbb = 'mongodb+srv://admin:Iyo6tI9V69oy1oft@cluster0.tze35.mongodb.net/mydata?retryWrites=true&w=majority'
+var db = 'mongodb+srv://admin:i6bkzeGwmfoZqsI5@cluster0.wg9fr.mongodb.net/student?retryWrites=true&w=majority'
+
+//var dbb = 'mongodb+srv://admin:Iyo6tI9V69oy1oft@cluster0.tze35.mongodb.net/mydata?retryWrites=true&w=majority'
 const mongoose = require('mongoose');
-mongoose.connect(dbb).catch(error => {
+mongoose.connect(db).catch(error => {
     console.log("co loi xay ra" + error)
 });
 
@@ -187,6 +189,16 @@ router.get('/all', function (req, res) {
     Student.find({}, function (err, data) {
         // trả về 1 file ejs.
         res.render('all', {data: data})
+    })
+
+})
+
+router.get('/allMobile', function (req, res) {
+
+    // lấy danh sách students
+    Student.find({}, function (err, data) {
+        // trả về 1 file ejs.
+        res.send(data)
     })
 
 })
@@ -350,7 +362,8 @@ var upload1 = multer1({
     storage: storage1, limits: {
         fileSize: 1 * 1024 // giới hạn file up lên là 1MB
     }
-});
+}).array('avatar',12);
+
 router.get('/upload', function (req, res) {
     res.render('upload', {message: ''})
 })
