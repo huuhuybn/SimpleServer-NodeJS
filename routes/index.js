@@ -198,7 +198,7 @@ router.get('/getAll', function (req, res) {
     // lấy danh sách students
     Student.find({}, function (err, data) {
         // trả về 1 file ejs.
-        res.render(data)
+        res.send(data)
     })
 
 })
