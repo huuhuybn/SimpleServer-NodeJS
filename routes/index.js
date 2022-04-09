@@ -193,6 +193,17 @@ router.get('/all', function (req, res) {
 
 })
 
+router.get('/getAllForMobile', function (req, res) {
+
+    // lấy danh sách students
+    Student.find({}, function (err, data) {
+        // trả về 1 file ejs.
+        res.send(data)
+    })
+
+})
+
+
 router.get('/allMobile', function (req, res) {
 
     // lấy danh sách students
