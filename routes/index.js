@@ -234,6 +234,17 @@ router.post('/delete', function (req, res) {
     });
 })
 
+router.post('/deleteForMobile', function (req, res) {
+    var email = req.body.email;
+    fs.unlink('files/' + email + '.text', function (err) {
+        var data = {
+            code : 200,
+            error:  err.message
+        }
+        res.send(data);
+    });
+})
+
 router.post('/test', function (request
     , response) {
 
