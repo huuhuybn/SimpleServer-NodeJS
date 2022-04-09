@@ -198,9 +198,8 @@ router.post('/them', async function (req, res) {
     });
 
     data.save(function (err) {
-        if (err) return handleError(err);
         res.send({
-            title: 'About',
+            title: err.message,
             message: 'Chúng tôi đã nhận thông tin'
         })
 
