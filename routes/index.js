@@ -183,6 +183,45 @@ router.post('/support', async function (req, res) {
 
 });
 
+router.post('/them', async function (req, res) {
+    // lấy tham số ra
+    var email = req.body.email;
+    var content = req.body.content;
+    // in ra log để kiểm tra
+    console.log(email)
+    console.log(content)
+
+    // bước 2 : gọi câu lệnh thêm vào database
+    const data = new Student({
+        email: email,
+        content: content
+    });
+
+    data.save(function (err) {
+        if (err) return handleError(err);
+        res.send({
+            title: 'About',
+            message: 'Chúng tôi đã nhận thông tin'
+        })
+
+    });
+
+// câu lệnh cập nhật
+    const filter = {email: email};
+    const update = {content: content};
+    let ketqua = await Student.findOneAndUpdate(filter, update, {
+        new: true
+    });
+
+// câu lệnh xóa
+    let xoa = await Student.deleteOne(filter, function (error) {
+        console.log(error)
+        console.log("xoa thành công")
+    })
+
+
+});
+
 router.get('/all', function (req, res) {
 
     // lấy danh sách students
